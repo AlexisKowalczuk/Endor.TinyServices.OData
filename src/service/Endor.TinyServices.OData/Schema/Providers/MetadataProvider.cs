@@ -1,5 +1,5 @@
 ﻿using Endor.TinyServices.OData.Common.Config;
-using Endor.TinyServices.OData.Schema.Interfaces;
+using Endor.TinyServices.OData.Interfaces.Schema;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

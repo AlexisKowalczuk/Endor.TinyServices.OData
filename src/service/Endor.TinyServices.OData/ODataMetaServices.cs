@@ -1,7 +1,7 @@
 ﻿using Endor.TinyServices.OData.Common.Entities;
 using Endor.TinyServices.OData.Common.Enums;
 using Endor.TinyServices.OData.Interfaces;
-using Endor.TinyServices.OData.Schema.Interfaces;
+using Endor.TinyServices.OData.Interfaces.Schema;
 
 namespace Endor.TinyServices.OData;
 

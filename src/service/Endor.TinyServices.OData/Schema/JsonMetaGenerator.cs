@@ -1,5 +1,5 @@
 ﻿using Endor.TinyServices.OData.Common.Entities;
-using Endor.TinyServices.OData.Schema.Interfaces;
+using Endor.TinyServices.OData.Interfaces.Schema;
 using Newtonsoft.Json;
 
 namespace Endor.TinyServices.OData.Schema;

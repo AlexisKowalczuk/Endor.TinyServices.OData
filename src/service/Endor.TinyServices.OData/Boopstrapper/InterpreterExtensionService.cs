@@ -2,10 +2,10 @@
 using Endor.TinyServices.OData.Common.Enums;
 using Endor.TinyServices.OData.Interfaces;
 using Endor.TinyServices.OData.Interfaces.Boopstrapper;
+using Endor.TinyServices.OData.Interfaces.Schema;
 using Endor.TinyServices.OData.Management;
 using Endor.TinyServices.OData.Management.ExpressionDefinitions;
 using Endor.TinyServices.OData.Schema;
-using Endor.TinyServices.OData.Schema.Interfaces;
 using Endor.TinyServices.OData.Schema.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

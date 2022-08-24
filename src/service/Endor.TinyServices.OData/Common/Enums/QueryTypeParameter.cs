@@ -5,7 +5,7 @@ namespace Endor.TinyServices.OData.Common.Enums;
 public enum QueryTypeParameter
 {
 	[Display(Name = "unknown")]
-	Unknown = -1,
+	Unknown = 0,
 
 	//[Display(Name = "$metadata")]
 	//Metadata,

@@ -1,6 +1,6 @@
 ﻿using Endor.TinyServices.OData.Common.Enums;
 
-namespace Endor.TinyServices.OData.Schema.Interfaces;
+namespace Endor.TinyServices.OData.Interfaces.Schema;
 
 public interface IMetaFactory
 {

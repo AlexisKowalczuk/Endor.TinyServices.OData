@@ -1,6 +1,6 @@
 ﻿using Endor.TinyServices.OData.Common.Entities;
 
-namespace Endor.TinyServices.OData.Management;
+namespace Endor.TinyServices.OData.Interfaces;
 
 public interface IODataExpression
 {

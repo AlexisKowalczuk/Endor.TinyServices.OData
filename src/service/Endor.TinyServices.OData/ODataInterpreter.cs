@@ -3,7 +3,6 @@ using Endor.TinyServices.OData.Common.Enums;
 using Endor.TinyServices.OData.Common.Exceptions;
 using Endor.TinyServices.OData.Common.Helper;
 using Endor.TinyServices.OData.Interfaces;
-using Endor.TinyServices.OData.Management;
 using Endor.TinyServices.OData.Schema.Extensions;
 using System.Data;
 

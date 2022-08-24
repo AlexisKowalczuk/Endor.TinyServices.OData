@@ -1,5 +1,6 @@
 ﻿using Endor.TinyServices.OData.Common.Entities;
 using Endor.TinyServices.OData.Common.Exceptions;
+using Endor.TinyServices.OData.Interfaces;
 using Endor.TinyServices.OData.Interfaces.Dialect;
 
 namespace Endor.TinyServices.OData.Management.ExpressionDefinitions;

@@ -1,4 +1,4 @@
-﻿namespace Endor.TinyServices.OData.Schema.Interfaces;
+﻿namespace Endor.TinyServices.OData.Interfaces.Schema;
 
 public interface IMetadataProvider
 {

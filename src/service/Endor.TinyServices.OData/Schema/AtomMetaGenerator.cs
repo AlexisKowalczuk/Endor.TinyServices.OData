@@ -2,8 +2,8 @@
 using Endor.TinyServices.OData.Common.Constants;
 using Endor.TinyServices.OData.Common.Entities;
 using Endor.TinyServices.OData.Common.Helper;
+using Endor.TinyServices.OData.Interfaces.Schema;
 using Endor.TinyServices.OData.Schema.Helper;
-using Endor.TinyServices.OData.Schema.Interfaces;
 using System.Xml;
 
 namespace Endor.TinyServices.OData.Schema;
