@@ -10,7 +10,8 @@ internal class FilterFunctionTypeHelper
 				ft == FilterFunctionType.matchesPattern ||
 				ft == FilterFunctionType.contains ||
 				ft == FilterFunctionType.endswith ||
-				ft == FilterFunctionType.startswith
+				ft == FilterFunctionType.startswith ||
+				ft == FilterFunctionType.@in
 				);
 	}
 }

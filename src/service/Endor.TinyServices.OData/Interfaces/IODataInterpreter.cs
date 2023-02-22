@@ -4,5 +4,5 @@ namespace Endor.TinyServices.OData.Interfaces;
 
 public interface IODataInterpreter
 {
-	Task<string> ProcessODataQuery(string entity, IDictionary<string, string> odataquery, MetaGeneratorType type, string context);
+	Task<string> ProcessODataQuery(string entity, IDictionary<string, string> odataquery, MetaGeneratorType type, string context, string tenantId = null);
 }

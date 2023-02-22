@@ -4,6 +4,6 @@ namespace Endor.TinyServices.OData.Common.Interfaces;
 
 public interface IDialectExpressionConverter
 {
-	string TransformExpression(object data);
-	string TransformFunction(FilterFunctionType type, IList<IPropertyValue> parameters);
+	string TransformExpression(object data, object context = null);
+	string TransformFunction(string entityName, string propertyName, FilterFunctionType type, IList<IPropertyValue> parameters);
 }

@@ -5,4 +5,6 @@ public class ODataServiceConfig
 	public IList<string> Assemblies { get; set; }
 
 	public string EntitiesFolder { get; set; }
+
+	public bool UseMultitenant { get; set; }
 }

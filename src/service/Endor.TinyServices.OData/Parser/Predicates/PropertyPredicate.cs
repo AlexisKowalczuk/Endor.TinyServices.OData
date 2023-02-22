@@ -20,6 +20,6 @@ public class PropertyPredicate : Predicate
 
 	public override string Read(IDialectExpressionConverter converter)
 	{
-		return $"{converter.TransformExpression(EntityPair)} {converter.TransformExpression(Operator)} {converter.TransformExpression(Value)}";
+		return $"{converter.TransformExpression(EntityPair)} {converter.TransformExpression(Operator, Value)} {converter.TransformExpression(Value)}";
 	}
 }

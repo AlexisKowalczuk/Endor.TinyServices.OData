@@ -38,7 +38,7 @@ public class ExpandODataExpression : IODataExpression
 		var statements = data.Split(';');
 		foreach (var stat in statements)
 		{
-			var operators = data.Split('=');
+			var operators = stat.Split('=');
 			var op = EnumHelper.GetValueFromName<QueryTypeParameter>(operators[0]);
 			if (op == QueryTypeParameter.Unknown) throw new ODataParserException($"Unable to process operator [{operators[0]}]");
 

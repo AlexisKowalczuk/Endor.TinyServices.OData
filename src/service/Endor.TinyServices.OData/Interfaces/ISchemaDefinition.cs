@@ -4,5 +4,5 @@ namespace Endor.TinyServices.OData.Interfaces;
 
 public interface ISchemaDefinition
 {
-	Task<ODataBuilder> Initialize(string entity);
+	Task<ODataBuilder> Initialize(string entity, string tenantId = null);
 }

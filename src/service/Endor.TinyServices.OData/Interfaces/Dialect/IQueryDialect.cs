@@ -5,7 +5,7 @@ namespace Endor.TinyServices.OData.Interfaces.Dialect;
 
 public interface IQueryDialect
 {
-	Task<ODataBuilder> Init(string entityName);
+	Task<ODataBuilder> Init(string entityName, string tenantId = null);
 
 	Task TopStatement(int number, ODataBuilder builder);
 

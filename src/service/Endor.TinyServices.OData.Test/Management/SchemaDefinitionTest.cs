@@ -27,7 +27,7 @@ namespace Endor.TinyServices.OData.Test.Management
 			await _service.Initialize(entity);
 
 			_mockQueryDialect.Verify(x =>
-				x.Init(entity), Times.Once);
+				x.Init(entity, null), Times.Once);
 		}
 
 

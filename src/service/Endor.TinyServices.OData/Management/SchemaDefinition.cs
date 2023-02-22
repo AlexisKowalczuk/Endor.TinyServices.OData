@@ -12,10 +12,10 @@ public class SchemaDefinition : ISchemaDefinition
 	{
 		_dialect = dialect;
 	}
-	public async Task<ODataBuilder> Initialize(string entity)
+	public async Task<ODataBuilder> Initialize(string entity, string tenantId = null)
 	{
 		if (entity == null) return null;
 
-		return await _dialect.Init(entity);
+		return await _dialect.Init(entity, tenantId);
 	}
 }

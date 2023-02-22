@@ -21,9 +21,9 @@ public class ODataInterpreter : IODataInterpreter
 		_schemaDefinition = schemaDefinition;
 	}
 
-	public async Task<string> ProcessODataQuery(string entity, IDictionary<string, string> queryParameters, MetaGeneratorType type, string context)
+	public async Task<string> ProcessODataQuery(string entity, IDictionary<string, string> queryParameters, MetaGeneratorType type, string context, string tenantId = null)
 	{
-		ODataBuilder query = await _schemaDefinition.Initialize(entity);
+		ODataBuilder query = await _schemaDefinition.Initialize(entity, tenantId);
 
 		if (queryParameters == null) return await ProcessQuery(query, context);
 

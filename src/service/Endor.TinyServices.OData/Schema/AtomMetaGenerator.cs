@@ -49,7 +49,7 @@ public class AtomMetaGenerator : IMetaGenerator
 		writer.WriteStartElement(MetaConstants.Schema.NAME, MetaConstants.Schema.NAMESPACE);
 		writer.WriteAttributeString(MetaConstants.Service.NAMESPACE_DEF, MetaConstants.Service.NAMESPACE_VALUE);
 
-		await SetProperties(writer);
+		await SetItems(writer);
 
 		//SET Annotations
 
@@ -60,50 +60,76 @@ public class AtomMetaGenerator : IMetaGenerator
 		return stream;
 	}
 
-	private async Task SetProperties(XmlWriter writer)
+	private async Task SetItems(XmlWriter writer)
 	{
 		var entities = await _provider.GetEntitiesInfo();
 		foreach (var item in entities)
 		{
-			writer.WriteStartElement(MetaConstants.Entity.NAME);
-			writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, item.Name);
+			if (item.IsEnum) SetEnum(writer, item);
+			else SetEntity(writer, item, entities);
 
-			var idProp = AttributeHelper.GetIdForEntity(item);
-			writer.WriteStartElement(MetaConstants.Entity.KEY);
-			writer.WriteStartElement(MetaConstants.Entity.REF);
-			writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, idProp);
-			writer.WriteEndElement();
-			writer.WriteEndElement();
+		}
+	}
 
-			var props = item.GetProperties();
+	private void SetEnum(XmlWriter writer, Type item)
+	{
+		writer.WriteStartElement(MetaConstants.Enum.NAME);
+		writer.WriteAttributeString(MetaConstants.Enum.Property.NAME, item.Name);
 
-			foreach (var propItem in props.Where(i => i.PropertyType.Namespace == "System"))
-			{
-				var prop = Nullable.GetUnderlyingType(propItem.PropertyType);
+		foreach (var enumItem in Enum.GetValues(item))
+		{
+			writer.WriteStartElement(MetaConstants.Enum.MEMBER);
 
-				if (prop == null) prop = propItem.PropertyType;
-
-				writer.WriteStartElement(MetaConstants.Entity.Property.DEF);
-				writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, propItem.Name);
-				writer.WriteAttributeString(MetaConstants.Entity.Property.TYPE, MetaConstants.ConvertTypeToODataType(prop.Name));
-
-				if (prop.Name != nameof(String))
-					writer.WriteAttributeString("Nullable", prop == propItem.PropertyType ? "True" : "False");
-
-				writer.WriteEndElement();
-			}
-
-			foreach (var prop in GetReferenceLists(item, entities))
-			{
-				writer.WriteStartElement(MetaConstants.Entity.Property.NAVIGATION);
-				writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, prop.Item1);
-				writer.WriteAttributeString(MetaConstants.Entity.Property.TYPE, prop.Item2);
-				writer.WriteAttributeString(MetaConstants.Entity.Property.PARTNER, item.Name);
-				writer.WriteEndElement();
-			}
+			writer.WriteAttributeString(MetaConstants.Enum.Property.NAME, enumItem.ToString());
+			writer.WriteAttributeString(MetaConstants.Enum.Property.VALUE, Convert.ToInt32(enumItem).ToString());
 
 			writer.WriteEndElement();
 		}
+
+
+		writer.WriteEndElement();
+	}
+
+	private void SetEntity(XmlWriter writer, Type item, IList<Type> entities)
+	{
+		writer.WriteStartElement(MetaConstants.Entity.NAME);
+		writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, item.Name);
+
+		var idProp = AttributeHelper.GetIdForEntity(item);
+		writer.WriteStartElement(MetaConstants.Entity.KEY);
+		writer.WriteStartElement(MetaConstants.Entity.REF);
+		writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, idProp);
+		writer.WriteEndElement();
+		writer.WriteEndElement();
+
+		var props = item.GetProperties();
+
+		foreach (var propItem in props.Where(i => i.PropertyType.Namespace == "System" || i.PropertyType.IsEnum))
+		{
+			var prop = Nullable.GetUnderlyingType(propItem.PropertyType);
+
+			if (prop == null) prop = propItem.PropertyType;
+
+			writer.WriteStartElement(MetaConstants.Entity.Property.DEF);
+			writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, propItem.Name);
+			writer.WriteAttributeString(MetaConstants.Entity.Property.TYPE, MetaConstants.ConvertTypeToODataType(prop.Name));
+
+			if (prop.Name != nameof(String))
+				writer.WriteAttributeString("Nullable", prop != propItem.PropertyType ? "True" : "False");
+
+			writer.WriteEndElement();
+		}
+
+		foreach (var prop in GetReferenceLists(item, entities))
+		{
+			writer.WriteStartElement(MetaConstants.Entity.Property.NAVIGATION);
+			writer.WriteAttributeString(MetaConstants.Entity.Property.NAME, prop.Item1);
+			writer.WriteAttributeString(MetaConstants.Entity.Property.TYPE, prop.Item2);
+			writer.WriteAttributeString(MetaConstants.Entity.Property.PARTNER, item.Name);
+			writer.WriteEndElement();
+		}
+
+		writer.WriteEndElement();
 	}
 
 	private IList<(string, string)> GetReferenceLists(Type type, IList<Type> entities)

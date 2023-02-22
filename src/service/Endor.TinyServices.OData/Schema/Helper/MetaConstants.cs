@@ -53,6 +53,18 @@ internal static class MetaConstants
 		}
 	}
 
+	internal static class Enum
+	{
+		internal const string NAME = "EnumType";
+		internal const string MEMBER = "Member";
+
+		internal static class Property
+		{
+			internal const string NAME = "Name";
+			internal const string VALUE = "Value";
+		}
+	}
+
 	internal static string? ConvertTypeToODataType(string name)
 	{
 		if (name == nameof(Int32))
@@ -69,7 +81,9 @@ internal static class MetaConstants
 			return "Edm.Single";
 		else if (name == nameof(Byte))
 			return "Edm.Byte";
+		else if (name == nameof(Guid))
+			return "Edm.Guid";
 		else
-			return name;
+			return $"{Service.NAMESPACE_VALUE}.{name}";
 	}
 }

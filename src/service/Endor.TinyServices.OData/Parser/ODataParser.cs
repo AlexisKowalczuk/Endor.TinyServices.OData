@@ -59,34 +59,7 @@ public class ODataParser
 			FilterFunctionType ft;
 			if (Enum.TryParse(word, out ft))
 			{
-				var parameters = GetGroupingSentence(ref data).Split(',');
-				var parameterList = new List<IPropertyValue>();
-				foreach (var param in parameters)
-				{
-					var rawEP = param.Split('/');
-					if (rawEP.Length > 1)
-						parameterList.Add(new EntityPropertyPair(rawEP[0], rawEP[1]));
-					else
-					{
-						if (rawEP[0].StartsWith('\'') || decimal.TryParse(rawEP[0], out _))
-							parameterList.Add(new EntityValue(rawEP[0]));
-						else
-							parameterList.Add(new EntityPropertyPair(null, rawEP[0]));
-					}
-				}
-
-				//each parameter is a property, entity/property or a function
-				PropertyOperatorType op = PropertyOperatorType.none;
-
-				IPropertyValue value = null;
-				if (FilterFunctionTypeHelper.HasOperator(ft))
-				{
-					var opString = GetWordFromString(ref data);
-					Enum.TryParse(opString, out op);
-					value = GetPropertyValue(ref data);
-				}
-
-				return new FunctionPredicate(ft, parameterList, op, value);
+				return ParseFunction(null, null, ft, ref data);
 			}
 			else
 			{
@@ -107,15 +80,56 @@ public class ODataParser
 				var opString = GetWordFromString(ref data);
 
 				PropertyOperatorType op;
-				Enum.TryParse(opString, out op);
-
-				var value = GetPropertyValue(ref data);
-				return new PropertyPredicate(entity, property, value, op);
+				if (Enum.TryParse(opString, out op))
+				{
+					var value = GetPropertyValue(ref data);
+					return new PropertyPredicate(entity, property, value, op);
+				}
+				else
+				{
+					FilterFunctionType function;
+					if (Enum.TryParse(opString, out function))
+					{
+						return ParseFunction(entity, property, function, ref data);
+					}
+				}
 			}
 
 		}
 
 		throw new NotImplementedException();
+	}
+
+	private Predicate ParseFunction(string entity, string property, FilterFunctionType function, ref string data)
+	{
+		var parameters = GetGroupingSentence(ref data).Split(',');
+		var parameterList = new List<IPropertyValue>();
+		foreach (var param in parameters)
+		{
+			var rawEP = param.Split('/');
+			if (rawEP.Length > 1)
+				parameterList.Add(new EntityPropertyPair(rawEP[0], rawEP[1]));
+			else
+			{
+				if (rawEP[0].StartsWith('\'') || decimal.TryParse(rawEP[0], out _))
+					parameterList.Add(new EntityValue(rawEP[0]));
+				else
+					parameterList.Add(new EntityPropertyPair(null, rawEP[0]));
+			}
+		}
+
+		//each parameter is a property, entity/property or a function
+		PropertyOperatorType op = PropertyOperatorType.none;
+
+		IPropertyValue value = null;
+		if (FilterFunctionTypeHelper.HasOperator(function))
+		{
+			var opString = GetWordFromString(ref data);
+			Enum.TryParse(opString, out op);
+			value = GetPropertyValue(ref data);
+		}
+
+		return new FunctionPredicate(entity, property, function, parameterList, op, value);
 	}
 
 	private IPropertyValue GetPropertyValue(ref string data)
@@ -147,7 +161,7 @@ public class ODataParser
 		}
 		else
 		{
-			if (decimal.TryParse(word, out _))
+			if (decimal.TryParse(word, out _) || word == "null")
 				return new EntityValue(word);
 			else
 				return new EntityPropertyPair(null, word);

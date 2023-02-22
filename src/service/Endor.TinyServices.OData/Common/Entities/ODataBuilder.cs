@@ -11,6 +11,8 @@ namespace Endor.TinyServices.OData.Common.Entities
 
 		public abstract string GetColumnsString();
 
+		public string TenantId { get; set; }
+
 		public string BaseEntityName { get; set; }
 
 		public bool Count { get; set; }
