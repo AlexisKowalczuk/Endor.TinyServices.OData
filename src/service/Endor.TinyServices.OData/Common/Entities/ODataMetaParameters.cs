@@ -6,14 +6,13 @@ namespace Endor.TinyServices.OData.Common.Entities
 	{
 		public string Name { get; set; }
 		public Type Entity { get; set; }
-		public IList<PropertyInfo> Properties { get; set; }
+		public IDictionary<string, PropertyInfo> Properties { get; set; }
 
 		public abstract string GetColumnsString();
 
 		internal void RemoveProperty(string item)
 		{
-			var prop = Properties.First(x => x.Name == item);
-			Properties.Remove(prop);
+			Properties.Remove(item);
 		}
 	}
 }

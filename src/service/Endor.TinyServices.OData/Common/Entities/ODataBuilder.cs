@@ -19,16 +19,16 @@ namespace Endor.TinyServices.OData.Common.Entities
 
 		protected string _query;
 
-		protected IList<ODataMetaParameters> _metadata;
+		protected IDictionary<string, ODataMetaParameters> _metadata;
 
 		public ODataBuilder()
 		{
-			_metadata = new List<ODataMetaParameters>();
+			_metadata = new Dictionary<string, ODataMetaParameters>();
 		}
 
 		public ODataMetaParameters GetBaseMetaParameter()
 		{
-			return _metadata.FirstOrDefault(x => x.Entity.Name == BaseEntityName);
+			return _metadata[BaseEntityName];
 		}
 
 		public virtual string ToString()
@@ -36,9 +36,9 @@ namespace Endor.TinyServices.OData.Common.Entities
 			return _query;
 		}
 
-		public void AddMetadata(ODataMetaParameters parameter)
+		public void AddMetadata(string entity, ODataMetaParameters parameter)
 		{
-			if (parameter != null) _metadata.Add(parameter);
+			if (parameter != null) _metadata.Add(entity, parameter);
 		}
 
 		public void SetQuery(string query)
@@ -61,7 +61,7 @@ namespace Endor.TinyServices.OData.Common.Entities
 				}
 
 				var alias = columnSplit[0];
-				column.ColumnName = $"{parameters.FirstOrDefault(x => x.Name == alias).Entity.Name}.{column.ColumnName.Substring(alias.Length + 1)}";
+				column.ColumnName = $"{parameters.FirstOrDefault(x => x.Value.Name == alias).Value.Entity.Name}.{column.ColumnName.Substring(alias.Length + 1)}";
 			}
 
 			foreach (var column in pruneColumns)
@@ -76,28 +76,27 @@ namespace Endor.TinyServices.OData.Common.Entities
 
 		public string GetEntityAlias(string entity)
 		{
-			var meta = _metadata.FirstOrDefault(x => x.Entity.Name == entity);
-			if (meta == null) throw new ODataParserException($"Unable to get entity name [{entity}]");
-
-			return meta.Name;
+			if(!_metadata.ContainsKey(entity)) throw new ODataParserException($"Unable to get entity name [{entity}]");
+			
+			return _metadata[entity].Name;
 		}
 
 		public void RemoveParameter(string item, string entity)
 		{
-			var meta = _metadata.FirstOrDefault(x => x.Entity.Name == entity);
+			var meta = _metadata[entity];
 			meta.RemoveProperty(item);
 
 		}
 
 		public bool ExistsPropertyMeta(string entity, string property)
 		{
-			var meta = _metadata.FirstOrDefault(x => x.Entity.Name == entity);
-			return meta.Properties.Any(x => x.Name == property);
+			var meta = _metadata[entity];
+			return meta.Properties.ContainsKey(property);
 		}
 
-		public IList<PropertyInfo> GetMetaProperties(string entity)
+		public IDictionary<string, PropertyInfo> GetMetaProperties(string entity)
 		{
-			return _metadata.FirstOrDefault(x => x.Entity.Name == entity).Properties;
+			return _metadata[entity].Properties;
 		}
 	}
 }

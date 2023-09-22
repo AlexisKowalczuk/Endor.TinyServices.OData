@@ -33,13 +33,13 @@ public static class DataTableExtensions
 				var entityName = columnDef[0];
 				var columnName = columnDef[1];
 				if (entityName == mainEntity)
-					jrow.Add(new JProperty(columnName, value));
+					jrow.Add(new JProperty(columnName, ConvertMetaDataToString(dt.Columns[i].DataType, value)));
 				else
 				{
 					if (!children.ContainsKey(entityName))
 						children.Add(entityName, new JObject());
 
-					children[entityName].Add(new JProperty(columnName, value));
+					children[entityName].Add(new JProperty(columnName, ConvertMetaDataToString(dt.Columns[i].DataType, value)));
 				}
 			}
 
@@ -56,4 +56,29 @@ public static class DataTableExtensions
 		return jobj.ToString();
 	}
 
+
+	private static object ConvertMetaDataToString(Type type, object value)
+	{
+		if (value == null)
+			return null;
+
+
+		if (type == typeof(DateTime))
+			return $"{(DateTime)value:o}";
+
+		/*
+		 Check -> ENUMS
+		if (type.BaseType.Name == nameof(Enum) && value is string)
+		{
+			return ((int)Enum.Parse(type, value.ToString())).ToString();
+		}
+		 */
+
+		if (type.IsAssignableFrom(value.GetType()))
+		{
+			return value;
+		}
+
+		return Convert.ChangeType(value, type);
+	}
 }
